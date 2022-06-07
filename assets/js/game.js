@@ -26,29 +26,33 @@ var fight = function(enemyName){
 
     if(promptFight === "FIGHT" || promptFight === "fight"){
         window.alert("Round " + roundNum + ": " + playerName + " vs. " + enemyName + "... BEGIN!");
+        
+        while(enemyHealth > 0 && playerHealth > 0){
+            // Player attack enemy + health (HP) log
+            enemyHealth = enemyHealth - playerAttack;
+            console.log(playerName + " attacked " + enemyName + "! " + enemyName + " now has " + enemyHealth + " HP remaining.");
 
-        // Player attack enemy + health (HP) log
-        enemyHealth = enemyHealth - playerAttack;
-        console.log(playerName + " attacked " + enemyName + "! " + enemyName + " now has " + enemyHealth + " HP remaining.");
+            // Check for enemy death:
+            if (enemyHealth <= 0){
+                window.alert(enemyName + " has signed off!");
+            }
+            else{
+                window.alert(enemyName + " is still standing with " + enemyHealth + " HP remaining.");
+            }
 
-        // Check for enemy death:
-        if (enemyHealth <= 0){
-            window.alert(enemyName + " has signed off!");
-        }
-        else{
-            window.alert(enemyName + " is still standing with " + enemyHealth + " HP remaining.");
-        }
+            // Enemy attacks player + health (HP) log
+            playerHealth = playerHealth - enemyAttack;
+            console.log(enemyName + " attacked " + playerName + "! " + playerName + " now has " + playerHealth + " HP remaining.");
 
-        // Enemy attacks player + health (HP) log
-        playerHealth = playerHealth - enemyAttack;
-        console.log(enemyName + " attacked " + playerName + "! " + playerName + " now has " + playerHealth + " HP remaining.");
-
-        if(playerHealth <= 0){
-            window.alert(playerName + " has signed off!");
+            // Check for player death:
+            if(playerHealth <= 0){
+                window.alert(playerName + " has signed off!");
+            }
+            else{
+                window.alert(playerName  + " is still standing with " + playerHealth + " HP remaining.");
+            }
         }
-        else{
-            window.alert(playerName  + " is still standing with " + playerHealth + " HP remaining.");
-        }
+        
     }
     else if(promptFight === "SKIP" || promptFight === "skip"){
         var confirmSkip = window.confirm("Skipping costs 2 MP (money points). Are you sure?");
@@ -72,4 +76,8 @@ var fight = function(enemyName){
 
 };
 
-// fight();
+for(var i = 0; i < enemyNames.length; i++){
+    var pickedEnemyName = enemyNames[i];
+    enemyHealth = 50;
+    fight(enemyNames[0]);
+}
