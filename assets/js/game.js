@@ -8,76 +8,80 @@ var enemyNames = ["Mr. Roboto", "Cindi Mayweather", "Robo Trumble"];
 var enemyHealth = 50;
 var enemyAttack = 12;
 
-// SKIP CHOICE
-var skip = function(){
-    playerMoney = playerMoney - 10;
-}
+var newFight = 1;
 
 // FIGHT CHOICE
 // Round variable (for counting)
 let roundNum = 1;
 
-var fight = function(enemyName){
-    window.alert("Welcome to Robo Galdiators!");
+var fight = function(enemyName){       
+    while(enemyHealth > 0 && playerHealth > 0){
 
-    // Prompting the use to pick fight or skip
-    var promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
-    console.log(promptFight);
-
-    if(promptFight === "FIGHT" || promptFight === "fight"){
-        window.alert("Round " + roundNum + ": " + playerName + " vs. " + enemyName + "... BEGIN!");
+        // Prompting the use to pick fight or skip
+        if(newFight){
+            window.alert("Round " + roundNum + ": " + playerName + " vs. " + enemyName + "... BEGIN!");
+            var promptFight = window.prompt("Would you like to FIGHT or SKIP this round of battle? Enter 'FIGHT' or 'SKIP' to choose.");
+            newFight--;
+        }else{
+            var promptFight = window.prompt("FIGHT on, or SKIP this round?")
+        }
         
-        while(enemyHealth > 0 && playerHealth > 0){
-            // Player attack enemy + health (HP) log
-            enemyHealth = enemyHealth - playerAttack;
-            console.log(playerName + " attacked " + enemyName + "! " + enemyName + " now has " + enemyHealth + " HP remaining.");
+        
 
-            // Check for enemy death:
-            if (enemyHealth <= 0){
-                window.alert(enemyName + " has signed off!");
-            }
-            else{
-                window.alert(enemyName + " is still standing with " + enemyHealth + " HP remaining.");
-            }
-
-            // Enemy attacks player + health (HP) log
-            playerHealth = playerHealth - enemyAttack;
-            console.log(enemyName + " attacked " + playerName + "! " + playerName + " now has " + playerHealth + " HP remaining.");
-
-            // Check for player death:
-            if(playerHealth <= 0){
-                window.alert(playerName + " has signed off!");
-            }
-            else{
-                window.alert(playerName  + " is still standing with " + playerHealth + " HP remaining.");
+        // QUESTION: Why does the skip code have to be put above the fight code in order for the "break;" to work?
+        if(promptFight === "SKIP" || promptFight === "skip"){
+            var confirmSkip = window.confirm("Skipping costs 10MP (money points). Are you sure?");
+            
+            if(confirmSkip){
+                window.alert(playerName + " has decided to skip this fight. " + playerMoney + "MP remaining.");
+                playerMoney = playerMoney - 10;
+                console.log("playerMoney", playerMoney);
+                break;
             }
         }
         
-    }
-    else if(promptFight === "SKIP" || promptFight === "skip"){
-        var confirmSkip = window.confirm("Skipping costs 2 MP (money points). Are you sure?");
-        if(confirmSkip){
-            playerMoney = playerMoney - 2;
-            window.alert(playerName + " has decided to skip this fight. " + playerMoney + "MP remaining.");
+        // ROUND START        
+        // Player attack enemy
+        enemyHealth = enemyHealth - playerAttack;
+        console.log(
+            enemyName + " is still standing with " + enemyHealth + " HP remaining."
+        );
+
+        // Check for enemy death:
+        if (enemyHealth <= 0){
+            window.alert(enemyName + " has signed off! You've won 20MP (money points)");
+            playerMoney = playerMoney + 20;
+            break;
+        }else{
+            window.alert(playerName + " attacked " + enemyName + "! " + enemyName + " now has " + enemyHealth + " HP remaining.");
         }
+
+        // Enemy attacks player
+        playerHealth = playerHealth - enemyAttack;
+        console.log(
+            playerName  + " is still standing with " + playerHealth + " HP remaining."
+        );
+
+        // Check for player death:
+        if(playerHealth <= 0){
+            window.alert(playerName + " has signed off!");
+            break;
+        }else{
+            window.alert(enemyName + " attacked " + playerName + "! " + playerName + " now has " + playerHealth + " HP remaining.");
+        } 
     }
-    else{
-        fight();
-    }
-
-    // Game States
-    // "WIN" - Player robot has defeated all enemy-robots
-
-    //    * Fight all enemy-robots
-
-    //    * Defeat each enemy-robot
-
-    // "LOSE" - Player robot's health is zero or less
-
+    roundNum++;
 };
 
 for(var i = 0; i < enemyNames.length; i++){
-    var pickedEnemyName = enemyNames[i];
-    enemyHealth = 50;
-    fight(enemyNames[0]);
+    if(playerHealth > 0){
+        window.alert("Welcome to Robo Galdiators!");
+        var pickedEnemyName = enemyNames[i];
+        enemyHealth = 50;
+        newFight = 1;
+        fight(pickedEnemyName);
+    }else{
+        window.alert("You have lost your robot in battle! GAME OVER.")
+    }
+
 }
