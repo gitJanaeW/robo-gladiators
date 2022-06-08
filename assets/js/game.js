@@ -5,10 +5,22 @@ let playerAttack = 10;
 let playerMoney = 10;
 
 var enemyNames = ["Mr. Roboto", "Cindi Mayweather", "Robo Trumble"];
-var enemyHealth = 50;
+var enemyHealth = randomNumber(40, 60);
 var enemyAttack = 12;
 
 var newFight = 1;
+
+// Random number between 40-60 function
+const randomNumber = function(min, max){
+    // LONG EXPLANATION OF RANDOMIZER
+    // Math.floor will round down whatever the value of Math.random is
+    // Whatever value is * by random() will be the max value because:
+        // The max value here is the max value minus the min value (since min value will be added back on at the end of the line of code)
+        // + 1 is added (since the Math.random will never equal it's highest number. max won't be possible if there's no +1)
+    // The min value is on the outside of the Math methods. This ensures that even with a randomizer value of 0, the min is still achievable
+    var value = Math.floor(Math.random() * (max - min + 1)) + min;
+    return value;
+}
 
 // Round variable (for counting)
 let roundNum = 1;
@@ -32,15 +44,17 @@ var fight = function(enemyName){
             
             if(confirmSkip){
                 window.alert(playerName + " has decided to skip this fight. " + playerMoney + "MP remaining.");
-                playerMoney = playerMoney - 10;
+                playerMoney = Math.max(0, playerMoney - 10);
                 console.log("playerMoney", playerMoney);
                 break;
             }
         }
-        
+
         // ROUND START        
         // Player attack enemy
-        enemyHealth = enemyHealth - playerAttack;
+        var damage = randomNumber(playerAttack - 3, playerAttack);
+        // Ensures that player health never drops below 0
+        enemyHealth = Math.max(0, enemyHealth - damage);
         console.log(
             enemyName + " is still standing with " + enemyHealth + " HP remaining."
         );
@@ -48,14 +62,15 @@ var fight = function(enemyName){
         // Check for enemy death:
         if (enemyHealth <= 0){
             window.alert(enemyName + " has signed off! You've won 20MP (money points)");
-            playerMoney = playerMoney + 20;
             break;
         }else{
             window.alert(playerName + " attacked " + enemyName + "! " + enemyName + " now has " + enemyHealth + " HP remaining.");
         }
 
         // Enemy attacks player
-        playerHealth = playerHealth - enemyAttack;
+        var damage = randomNumber(enemyAttack - 3, enemyAttack);
+        // enemyHealth = randomNumber(0, enemyHealth - damage); <<<< IF I KEPT THIS, WOULD THAT MEAN THE ENEMY CAN "MISS" AN ATTACK, DOING NO DAMAGE?
+        enemyHealth = randomNumber(0, enemyHealth - damage);
         console.log(
             playerName  + " is still standing with " + playerHealth + " HP remaining."
         );
