@@ -1,17 +1,14 @@
-// INITIALIZE PLAYER + ENEMIES
-const playerName = window.prompt("What is your robo name?");
-let playerHealth = 100;
-let playerAttack = 10;
-let playerMoney = 10;
-
-var enemyNames = ["Mr. Roboto", "Cindi Mayweather", "Robo Trumble"];
-var enemyHealth = randomNumber(40, 60);
-var enemyAttack = 12;
-
-var newFight = 1;
-
-// Random number between 40-60 function
+// Random number RANGE
 const randomNumber = function(min, max){
+    if(min > max){
+        console.log("ERROR: Min number is bigger than max num.");
+    }
+    else if(min === max){
+        console.log("ERROR: Min and max numbers are equal.");
+    }
+    else{
+        break;
+    }
     // LONG EXPLANATION OF RANDOMIZER
     // Math.floor will round down whatever the value of Math.random is
     // Whatever value is * by random() will be the max value because:
@@ -22,16 +19,60 @@ const randomNumber = function(min, max){
     return value;
 }
 
+// INITIALIZE PLAYER + ENEMIES
+
+const player = {
+    name: window.prompt("What is your robo name?"),
+    health: 100,
+    attack: 10,
+    money: 10,
+    reset: function(){
+        this.health = 100;
+        this.money = 10;
+        this.attack = 10;
+    },
+    refillHealth: function(){
+        // The following line the shorthand of this.health = this.heal + 20;
+        this.health += 20;
+        this.money -= 7;
+    },
+    upgradeAttack: function(){
+        this.attack += 6;
+        this.money -= 7;
+    }
+}
+
+
+const enemies = [
+    {
+        name: "Roboto",
+        attack: randomNumber(10, 14)
+    },
+    {
+        name: "Amy Android",
+        attack: randomNumber(10, 14)
+    },
+    {
+        name: "Robo Trumble",
+        attack: randomNumber(10, 14)
+    }
+
+];
+
+var pickedEnemyObj.health randomNumber(40, 60);
+
+var newFight = 1;
+
 // Round variable (for counting)
 let roundNum = 1;
 
 // FIGHT
-var fight = function(enemyName){    
-    while(enemyHealth > 0 && playerHealth > 0){
+var fight = function(enemies){    
+    while(enemies.health > 0 && player.health > 0){
 
         // Prompting the use to pick fight or skip
         if(newFight){
-            window.alert("Round " + roundNum + ": " + playerName + " vs. " + enemyName + "... BEGIN!");
+            window.alert("Round " + roundNum + ": " + player.name + " vs. " + enemies.name + "... BEGIN!");
             var promptFight = window.prompt("Would you like to FIGHT or SKIP this round of battle? Enter 'FIGHT' or 'SKIP' to choose.");
             newFight--;
         }else{
@@ -43,44 +84,44 @@ var fight = function(enemyName){
             var confirmSkip = window.confirm("Skipping costs 10MP (money points). Are you sure?");
             
             if(confirmSkip){
-                window.alert(playerName + " has decided to skip this fight. " + playerMoney + "MP remaining.");
-                playerMoney = Math.max(0, playerMoney - 10);
-                console.log("playerMoney", playerMoney);
+                window.alert(player.name + " has decided to skip this fight. " + player.money + "MP remaining.");
+                player.money = Math.max(0, player.money - 10);
+                console.log("player.money", player.money);
                 break;
             }
         }
 
         // ROUND START        
         // Player attack enemy
-        var damage = randomNumber(playerAttack - 3, playerAttack);
+        var damage = randomNumber(player.attack - 3, player.attack);
         // Ensures that player health never drops below 0
-        enemyHealth = Math.max(0, enemyHealth - damage);
+        enemies.health = Math.max(0, enemies.health - damage);
         console.log(
-            enemyName + " is still standing with " + enemyHealth + " HP remaining."
+            enemies.name + " is still standing with " + enemies.health + " HP remaining."
         );
 
         // Check for enemy death:
-        if (enemyHealth <= 0){
-            window.alert(enemyName + " has signed off! You've won 20MP (money points)");
+        if (enemies.health <= 0){
+            window.alert(enemies.name + " has signed off! You've won 20MP (money points)");
             break;
         }else{
-            window.alert(playerName + " attacked " + enemyName + "! " + enemyName + " now has " + enemyHealth + " HP remaining.");
+            window.alert(player.name + " attacked " + enemies.name + "! " + enemies.name + " now has " + enemies.health + " HP remaining.");
         }
 
         // Enemy attacks player
-        var damage = randomNumber(enemyAttack - 3, enemyAttack);
-        // enemyHealth = randomNumber(0, enemyHealth - damage); <<<< IF I KEPT THIS, WOULD THAT MEAN THE ENEMY CAN "MISS" AN ATTACK, DOING NO DAMAGE?
-        enemyHealth = randomNumber(0, enemyHealth - damage);
+        var damage = randomNumber(enemies.health - 3, enemies.health);
+        // enemies.health = randomNumber(0, enemies.health - damage); <<<< IF I KEPT THIS, WOULD THAT MEAN THE ENEMY CAN "MISS" AN ATTACK, DOING NO DAMAGE?
+        enemies.health = randomNumber(0, enemies.health - damage);
         console.log(
-            playerName  + " is still standing with " + playerHealth + " HP remaining."
+            player.name  + " is still standing with " + player.health + " HP remaining."
         );
 
         // Check for player death:
-        if(playerHealth <= 0){
-            window.alert(playerName + " has signed off!");
+        if(player.health <= 0){
+            window.alert(player.name + " has signed off!");
             break;
         }else{
-            window.alert(enemyName + " attacked " + playerName + "! " + playerName + " now has " + playerHealth + " HP remaining.");
+            window.alert(enemies.name + " attacked " + player.name + "! " + player.name + " now has " + player.health + " HP remaining.");
         } 
     }
     roundNum++;
@@ -89,21 +130,18 @@ var fight = function(enemyName){
 
 const startGame = function(){
     // Reset player stats
-    playerHealth = 100;
-    playerAttack = 10;
-    // Why reset money...?
-    playerMoney = 10;
+    player.reset();
 
-    for(var i = 0; i < enemyNames.length; i++){
-        if(playerHealth > 0){
+    for(var i = 0; i < enemies.length; i++){
+        if(player.health > 0){
             window.alert("Welcome to Robo Galdiators!");
-            var pickedEnemyName = enemyNames[i];
-            enemyHealth = 50;
+            const pickedEnemyObj = enemies[i];
+            enemies.health = 50;
             newFight = 1;
-            fight(pickedEnemyName);
+            fight(pickedEnemyObj);
 
             // Why do we need to check player health if the parent if statement already checks if the player is alive?
-            if(playerHealth > 0 && i < enemyNames.length - 1){
+            if(playerHealth > 0 && i < enemies.length - 1){
                 var storeConfirm = window.confirm("The fight is over. Visit the store before the next round?");
 
                 if(storeConfirm){
@@ -121,7 +159,7 @@ const startGame = function(){
 // End pf the entire game
 const endGame = function(){
     if(playerHealth > 0){
-        window.alert("Great job, you've survived the game! You now have a score of " + playerMoney + ".");
+        window.alert("Great job, you've survived the game! You now have a score of " + player.money + ".");
     }
     else{
         window.alert("You've lost your robot in battle.")
@@ -148,23 +186,11 @@ var shop = function(){
         // Because there's no break in "refill", it falls through to the conditions that are applied to "REFILL". You can add as many conditions as you want
         case "refill":
         case "REFILL":
-            if(playerMoney < 7){
-                window.alert("You do not have enough money to purchase this item. Player money: " + playerMoney + ".");
-            }else{
-                window.alert("Refilling player's health by 20 for 7MP (money points).");
-                playerHealth = playerHealth + 20;
-                playerMoney = playerMoney - 7;
-            }
+            player.refillHealth();
             break;
         case "upgrade":
         case "UPGRADE":
-            if(playerMoney < 7){
-                window.alert("You do not have enough money to purchase this item. Player money: " + playerMoney + ".");
-            }else{
-                window.alert("Upgrading player's attack by 6 for 7MP (money points).");
-            playerAttack = playerAttack + 6;
-            playerMoney = playerMoney - 7;
-            }
+            player.upgradeAttack();
             break;
         case "leave":
         case "LEAVE":
